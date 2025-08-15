@@ -1,7 +1,7 @@
 # Dependencies
 /node_modules
-/palengke-backend/node_modules
-/palengke-frontend/node_modules
+/server/node_modules
+/client/node_modules
 
 # Logs
 *.log
