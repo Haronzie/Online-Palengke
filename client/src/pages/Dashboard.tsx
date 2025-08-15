@@ -1,8 +1,8 @@
-import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import React from 'react'
+import { useAuth } from '../contexts/AuthContext'
 
-const Dashboard = () => {
-  const { user, logout } = useAuth();
+const Dashboard: React.FC = () => {
+  const { user, logout } = useAuth()
 
   return (
     <div className="p-8 bg-white rounded-lg shadow-md">
@@ -20,7 +20,7 @@ const Dashboard = () => {
         Logout
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

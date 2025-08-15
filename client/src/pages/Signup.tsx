@@ -1,90 +1,113 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
-function Signup() {
-  const navigate = useNavigate();
-  const { register, isAuthenticated } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+interface SignupFormData {
+  name: string
+  email: string
+  password: string
+  confirmPassword: string
+  phone: string
+}
 
-  const [formData, setFormData] = useState({
+interface ValidationErrors {
+  name?: string
+  email?: string
+  password?: string
+  confirmPassword?: string
+  submit?: string
+}
+
+const Signup: React.FC = () => {
+  const navigate = useNavigate()
+  const { register, isAuthenticated } = useAuth()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errors, setErrors] = useState<ValidationErrors>({})
+
+  const [formData, setFormData] = useState<SignupFormData>({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
     phone: '',
-  });
+  })
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/dashboard')
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name] || errors.submit) {
-      setErrors(prev => ({ ...prev, [name]: null, submit: null }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+    if (errors[name as keyof ValidationErrors] || errors.submit) {
+      const newErrors = { ...errors }
+      delete newErrors[name as keyof ValidationErrors]
+      delete newErrors.submit
+      setErrors(newErrors)
     }
-  };
+  }
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Full name is required';
+  const validateForm = (): boolean => {
+    const newErrors: ValidationErrors = {}
+    if (!formData.name.trim()) newErrors.name = 'Full name is required'
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email address is invalid';
+      newErrors.email = 'Email address is invalid'
     }
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'Password is required'
     } else {
+      const passwordErrors: string[] = []
       if (formData.password.length < 6) {
-        newErrors.password = 'Password must be at least 6 characters';
+        passwordErrors.push('Password must be at least 6 characters')
       }
       if (!/[0-9]/.test(formData.password)) {
-        newErrors.password = (newErrors.password ? newErrors.password + '. ' : '') + 'Password must contain a number';
+        passwordErrors.push('Password must contain a number')
       }
       if (!/[a-z]/.test(formData.password)) {
-        newErrors.password = (newErrors.password ? newErrors.password + '. ' : '') + 'Password must contain a lowercase letter';
+        passwordErrors.push('Password must contain a lowercase letter')
       }
       if (!/[A-Z]/.test(formData.password)) {
-        newErrors.password = (newErrors.password ? newErrors.password + '. ' : '') + 'Password must contain an uppercase letter';
+        passwordErrors.push('Password must contain an uppercase letter')
+      }
+      if (passwordErrors.length > 0) {
+        newErrors.password = passwordErrors.join('. ')
       }
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'Passwords do not match'
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault()
+    if (!validateForm()) return
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     const userData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
       phone: formData.phone,
-    };
+    }
 
     try {
-      await register(userData);
-      navigate('/login?registered=true');
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Could not complete signup. Please try again.';
-      setErrors({ submit: errorMessage });
+      await register(userData)
+      navigate('/login?registered=true')
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Could not complete signup. Please try again.'
+      setErrors({ submit: errorMessage })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -187,7 +210,7 @@ function Signup() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Signup;
+export default Signup

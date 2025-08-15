@@ -1,11 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { FiSearch, FiShoppingCart, FiStar, FiClock } from 'react-icons/fi';
-import mangoImg from '../assets/mango.webp';
-import tomatoesImg from '../assets/tomatoes.webp';
-import fishImg from '../assets/fish.webp';
-import { useNavigate } from 'react-router-dom';
+import React from 'react'
+import { FiSearch, FiShoppingCart, FiStar, FiClock } from 'react-icons/fi'
+import mangoImg from '../assets/mango.webp'
+import tomatoesImg from '../assets/tomatoes.webp'
+import fishImg from '../assets/fish.webp'
+import { useNavigate } from 'react-router-dom'
 
-const products = [
+interface Product {
+  id: number
+  name: string
+  price: string
+  originalPrice: string
+  image: string
+  isNew: boolean
+  rating: number
+  deliveryTime: string
+  vendor: string
+  category: string
+}
+
+interface Category {
+  name: string
+  icon: string
+  count: number
+}
+
+const products: Product[] = [
   { 
     id: 1, 
     name: 'Fresh Mangoes', 
@@ -42,10 +61,24 @@ const products = [
     vendor: 'Seaside Market',
     category: 'seafood'
   },
-];
+]
 
-function Home() {
-  const navigate = useNavigate();
+const Home: React.FC = () => {
+  const navigate = useNavigate()
+
+  const handleCategoryClick = (categoryName: string): void => {
+    navigate(`/products?category=${categoryName.toLowerCase()}`)
+  }
+
+  const handleProductAction = (action: string, productId: number): void => {
+    // Handle product actions like add to cart, buy now, etc.
+    console.log(`${action} for product ${productId}`)
+  }
+
+  const handleNewsletterSubmit = (email: string): void => {
+    // Handle newsletter subscription
+    console.log('Newsletter subscription for:', email)
+  }
 
   return (
     <div className="font-sans text-gray-800">
@@ -65,7 +98,7 @@ function Home() {
                 Shop Now
               </button>
               <button 
-                onClick={() => document.getElementById('featured').scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('featured')?.scrollIntoView({ behavior: 'smooth' })}
                 className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
               >
                 View Specials
@@ -121,7 +154,10 @@ function Home() {
                   </span>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <button className="w-full bg-white text-green-700 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors">
+                  <button 
+                    className="w-full bg-white text-green-700 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors"
+                    onClick={() => navigate(`/products/${product.id}`)}
+                  >
                     Quick View
                   </button>
                 </div>
@@ -153,14 +189,14 @@ function Home() {
                 <div className="mt-4 space-y-2">
                   <button 
                     className="w-full bg-green-600 text-white py-2.5 rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors flex items-center justify-center"
-                    onClick={() => {}}
+                    onClick={() => handleProductAction('add-to-cart', product.id)}
                   >
                     <FiShoppingCart className="mr-2" />
                     Add to Cart
                   </button>
                   <button 
                     className="w-full border border-green-600 text-green-700 py-2.5 rounded-lg font-medium hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-100 transition-colors"
-                    onClick={() => {}}
+                    onClick={() => handleProductAction('buy-now', product.id)}
                   >
                     Buy Now
                   </button>
@@ -173,7 +209,7 @@ function Home() {
         <div className="mt-12 text-center">
           <button 
             className="border-2 border-green-600 text-green-600 hover:bg-green-50 px-8 py-3 rounded-full font-medium transition-colors"
-            onClick={() => {}}
+            onClick={() => navigate('/products')}
           >
             Load More Products
           </button>
@@ -190,11 +226,11 @@ function Home() {
               { name: 'Vegetables', icon: '🥦', count: 36 },
               { name: 'Seafood', icon: '🦐', count: 28 },
               { name: 'Meat & Poultry', icon: '🍗', count: 24 },
-            ].map((category, index) => (
+            ].map((category: Category, index: number) => (
               <div 
                 key={index} 
                 className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:-translate-y-1 transform transition-transform"
-                onClick={() => {}}
+                onClick={() => handleCategoryClick(category.name)}
               >
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
                   {category.icon}
@@ -219,15 +255,27 @@ function Home() {
               type="email"
               placeholder="Your email address"
               className="flex-1 min-w-0 px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  const target = e.target as HTMLInputElement
+                  handleNewsletterSubmit(target.value)
+                }
+              }}
             />
-            <button className="bg-yellow-400 text-green-900 font-semibold px-6 py-3 rounded-r-lg hover:bg-yellow-300 transition-colors">
+            <button 
+              className="bg-yellow-400 text-green-900 font-semibold px-6 py-3 rounded-r-lg hover:bg-yellow-300 transition-colors"
+              onClick={(e) => {
+                const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement
+                if (input) handleNewsletterSubmit(input.value)
+              }}
+            >
               Subscribe
             </button>
           </div>
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home

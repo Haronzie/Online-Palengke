@@ -1,101 +1,129 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
+import { useAuth } from '../contexts/AuthContext'
 
-function Login() {
-  const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [isFocused, setIsFocused] = useState({
+interface LoginCredentials {
+  email: string
+  password: string
+  rememberMe: boolean
+}
+
+interface ValidationErrors {
+  email?: string
+  password?: string
+  submit?: string
+}
+
+interface FocusState {
+  email: boolean
+  password: boolean
+}
+
+const Login: React.FC = () => {
+  const navigate = useNavigate()
+  const { login, isAuthenticated } = useAuth()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [isFocused, setIsFocused] = useState<FocusState>({
     email: false,
     password: false
-  });
+  })
 
-  const [credentials, setCredentials] = useState({
+  const [credentials, setCredentials] = useState<LoginCredentials>({
     email: '',
     password: '',
     rememberMe: false,
-  });
+  })
 
-  const emailRef = useRef(null);
+  const emailRef = useRef<HTMLInputElement>(null)
   
   useEffect(() => {
     if (emailRef.current) {
-      emailRef.current.focus();
+      emailRef.current.focus()
     }
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/dashboard')
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate])
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value, type, checked } = e.target
     setCredentials(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
-    }));
+    }))
     
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: null }));
+    if (errors[name as keyof ValidationErrors]) {
+      const newErrors = { ...errors }
+      delete newErrors[name as keyof ValidationErrors]
+      setErrors(newErrors)
     }
     if (errors.submit) {
-      setErrors(prev => ({...prev, submit: null}));
+      const newErrors = { ...errors }
+      delete newErrors.submit
+      setErrors(newErrors)
     }
-  };
+  }
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: ValidationErrors = {}
     if (!credentials.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(credentials.email)) {
-      newErrors.email = 'Email address is invalid';
+      newErrors.email = 'Email address is invalid'
     }
     if (!credentials.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'Password is required'
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault()
     
-    if (!validateForm()) return;
+    if (!validateForm()) return
     
-    setIsLoading(true);
+    setIsLoading(true)
     
     try {
       await login({ 
         email: credentials.email, 
         password: credentials.password 
-      });
-      navigate('/dashboard');
+      })
+      navigate('/dashboard')
 
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Invalid email or password. Please try again.';
-      setErrors({ submit: errorMessage });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Invalid email or password. Please try again.'
+      setErrors({ submit: errorMessage })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
   
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = (): void => {
+    setShowPassword(!showPassword)
+  }
   
-  const handleFocus = (field) => {
-    setIsFocused(prev => ({ ...prev, [field]: true }));
-  };
+  const handleFocus = (field: keyof FocusState): void => {
+    setIsFocused(prev => ({ ...prev, [field]: true }))
+  }
   
-  const handleBlur = (field) => {
-    setIsFocused(prev => ({ ...prev, [field]: false }));
-  };
+  const handleBlur = (field: keyof FocusState): void => {
+    setIsFocused(prev => ({ ...prev, [field]: false }))
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative">
+      {/* Palengke Logo - Top Left */}
+      <div className="absolute top-6 left-6">
+        <Link to="/" className="text-2xl font-bold text-green-600 hover:text-green-700 transition">
+          Palengke
+        </Link>
+      </div>
+      
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
           <div className="p-8">
@@ -135,7 +163,7 @@ function Login() {
                     className={`block w-full pl-10 pr-3 py-3 border-0 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${errors.email ? 'text-red-900' : ''}`}
                     placeholder="you@example.com"
                     autoComplete="email"
-                    aria-invalid={!!errors.email}
+                    aria-invalid={Boolean(errors.email)}
                     aria-describedby={errors.email ? 'email-error' : undefined}
                   />
                 </div>
@@ -171,7 +199,7 @@ function Login() {
                     className={`block w-full pl-10 pr-10 py-3 border-0 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none sm:text-sm ${errors.password ? 'text-red-900' : ''}`}
                     placeholder="••••••••"
                     autoComplete="current-password"
-                    aria-invalid={!!errors.password}
+                    aria-invalid={Boolean(errors.password)}
                     aria-describedby={errors.password ? 'password-error' : undefined}
                   />
                   <button
@@ -262,7 +290,7 @@ function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

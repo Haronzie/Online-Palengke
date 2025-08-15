@@ -1,70 +1,184 @@
-# Getting Started with Create React App
+# Online Palengke Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React 19 + Vite + TypeScript application for the Online Palengke marketplace platform.
 
-## Available Scripts
+## 🚀 Tech Stack
 
-In the project directory, you can run:
+- **React 19** - Latest React with modern features
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Fast build tool and dev server
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Router DOM** - Client-side routing
+- **Axios** - HTTP client for API requests
+- **React Icons** - Popular icon library
+- **ESLint + Prettier** - Code linting and formatting
 
-### `npm start`
+## 📋 Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Before running this project, make sure you have:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Node.js** (version 18.0 or higher)
+- **npm** (version 9.0 or higher)
 
-### `npm test`
+## 🛠️ Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Navigate to the client directory:
+   ```bash
+   cd client
+   ```
 
-### `npm run build`
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🏃‍♂️ Development
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Start the development server:
+```bash
+npm run dev
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The application will be available at `http://localhost:3000` with hot module replacement (HMR) enabled.
 
-### `npm run eject`
+### Other development commands:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Type checking**: `npm run type-check`
+- **Linting**: `npm run lint`
+- **Fix linting issues**: `npm run lint:fix`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🏗️ Building for Production
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Build the application:
+```bash
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This will:
+1. Run TypeScript compilation (`tsc`)
+2. Build the project with Vite optimizations
+3. Output files to the `build` directory
 
-## Learn More
+### Preview production build:
+```bash
+npm run preview
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🧪 Testing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Run tests:
+```bash
+npm run test
+```
 
-### Code Splitting
+### Run tests with UI:
+```bash
+npm run test:ui
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🌍 Environment Variables
 
-### Analyzing the Bundle Size
+Create a `.env` file in the client directory for environment-specific variables:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```env
+VITE_API_URL=http://localhost:3002/api
+VITE_APP_TITLE=Online Palengke
+```
 
-### Making a Progressive Web App
+**Note**: All environment variables for the frontend must be prefixed with `VITE_` to be accessible in the browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📁 Project Structure
 
-### Advanced Configuration
+```
+client/
+├── public/              # Static assets
+├── src/
+│   ├── api.ts          # API configuration and endpoints
+│   ├── components/     # Reusable UI components
+│   ├── contexts/       # React contexts (Auth, etc.)
+│   ├── pages/          # Page components
+│   ├── assets/         # Images, fonts, etc.
+│   ├── styles/         # Global styles
+│   ├── main.tsx        # Application entry point
+│   ├── App.tsx         # Main App component
+│   └── vite-env.d.ts   # Vite environment types
+├── index.html          # HTML template
+├── vite.config.ts      # Vite configuration
+├── tsconfig.json       # TypeScript configuration
+├── tailwind.config.js  # Tailwind CSS configuration
+└── package.json        # Dependencies and scripts
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🎯 Key Features
 
-### Deployment
+- **Modern React 19** with latest features and optimizations
+- **Strict TypeScript** configuration for type safety
+- **Fast development** with Vite's HMR
+- **Responsive design** with Tailwind CSS
+- **Authentication** with JWT tokens
+- **Protected routes** and user management
+- **Product catalog** with search and filtering
+- **Shopping cart** and wishlist functionality
+- **Order management** system
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🔧 Path Aliases
 
-### `npm run build` fails to minify
+The project is configured with path aliases for cleaner imports:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```typescript
+import { Button } from '@/components/Button'
+import { AuthProvider } from '@/contexts/AuthContext'
+import HomePage from '@/pages/Home'
+```
+
+Available aliases:
+- `@/` → `src/`
+- `@/components/` → `src/components/`
+- `@/pages/` → `src/pages/`
+- `@/contexts/` → `src/contexts/`
+- `@/assets/` → `src/assets/`
+- `@/styles/` → `src/styles/`
+
+## 📦 Build Output
+
+The production build includes:
+- **Code splitting** for optimal loading
+- **Tree shaking** to remove unused code
+- **Asset optimization** (images, CSS, JS)
+- **Source maps** for debugging
+- **Modern ES modules** for better performance
+
+## 🚀 Deployment
+
+The built application is static and can be deployed to any static hosting service:
+
+- **Vercel**: `vercel --prod`
+- **Netlify**: Deploy the `build` folder
+- **GitHub Pages**: Use the build output
+- **AWS S3**: Upload the build folder
+
+## 🤝 Contributing
+
+1. Follow the TypeScript strict mode guidelines
+2. Use ESLint and Prettier for code formatting
+3. Ensure all tests pass before committing
+4. Follow the existing component structure and naming conventions
+
+## 📚 Learn More
+
+- [React 19 Documentation](https://react.dev)
+- [Vite Documentation](https://vitejs.dev)
+- [TypeScript Documentation](https://www.typescriptlang.org)
+- [Tailwind CSS Documentation](https://tailwindcss.com)
+
+## 🔄 Migration Notes
+
+This project was migrated from Create React App to Vite + TypeScript while preserving all existing functionality and design. Key changes include:
+
+- Replaced `react-scripts` with Vite for faster builds
+- Converted all JavaScript files to TypeScript
+- Updated build and development scripts
+- Migrated environment variables to Vite's `import.meta.env`
+- Enhanced ESLint and Prettier configuration for TypeScript
+
+The visual design and user experience remain exactly the same as the original CRA application.

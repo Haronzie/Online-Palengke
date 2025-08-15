@@ -1,27 +1,27 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import Layout from './components/layout/Layout';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
-import Profile from './pages/Profile';
-import Orders from './pages/Orders';
-import Cart from './pages/Cart';
-import Wishlist from './pages/Wishlist';
-import ProtectedRoute from './components/ProtectedRoute';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import Layout from './components/layout/Layout'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Dashboard from './pages/Dashboard'
+import Products from './pages/Products'
+import ProductDetail from './pages/ProductDetail'
+import Profile from './pages/Profile'
+import Orders from './pages/Orders'
+import Cart from './pages/Cart'
+import Wishlist from './pages/Wishlist'
+import ProtectedRoute from './components/ProtectedRoute'
 
-function App() {
+const App: React.FC = () => {
   return (
     <AuthProvider>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Layout><Home /></Layout>} />
-        <Route path="/login" element={<Layout><Login /></Layout>} />
-        <Route path="/signup" element={<Layout><Signup /></Layout>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/products" element={<Layout><Products /></Layout>} />
         <Route path="/products/:id" element={<Layout><ProductDetail /></Layout>} />
 
@@ -39,7 +39,7 @@ function App() {
 
       </Routes>
     </AuthProvider>
-  );
+  )
 }
 
-export default App;
+export default App
