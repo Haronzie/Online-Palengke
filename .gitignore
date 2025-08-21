@@ -1,2 +1,4 @@
-node_modules/
-.env
+# Add these lines to your existing .gitignore
+backend/.env
+backend/dist/
+backend/node_modules/
